@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IPv4-Only APN Profile Generator</title>
+    <style>
+        :root {
+            --primary-color: #4a6fa5;
+            --secondary-color: #166088;
+            --accent-color: #4d9de0;
+            --light-color: #e1e5ee;
+            --dark-color: #1e3d59;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            background-color: #f7f9fc;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            margin: 0;
+            font-size: 2rem;
+            font-weight: 600;
+        }
+        
+        h2 {
+            color: var(--dark-color);
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 10px;
+            margin-top: 30px;
+        }
+        
+        .info-section {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .generator-section {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        select, button {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin: 15px 0;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+        
+        select {
+            background-color: white;
+        }
+        
+        button {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: var(--accent-color);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background-color: var(--light-color);
+            color: var(--dark-color);
+        }
+        
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .alert {
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>IPv4-Only APN Profile Generator</h1>
+            <p>Generate iOS profiles to disable IPv6 on cellular connections</p>
+        </header>
+        
+        <div class="info-section">
+            <h2>What is this tool?</h2>
+            <p>This tool creates a custom APN profile for iOS devices that forces your cellular connection to use IPv4 only, disabling IPv6 completely. Some users prefer this to avoid connectivity issues or improve performance on certain networks.</p>
+            <div class="alert">
+                <strong>Note:</strong> This profile only affects cellular data connections and won't impact your Wi-Fi or other network interfaces.
+            </div>
+        </div>
+        
+        <div class="generator-section">
+            <h2>Generate Your Profile</h2>
+            <p>Select your cellular carrier from the list below:</p>
+            
+            <select id="carrier-select">
+                <option value="">-- Select Carrier --</option>
+                <option value="vzwinternet">Verizon (vzwinternet)</option>
+                <option value="NXTGENPHONE">AT&T (NXTGENPHONE)</option>
+                <option value="fast.t-mobile.com">T-Mobile (fast.t-mobile.com)</option>
+                <option value="internet">Sprint (internet)</option>
+                <option value="VZWINTERNET">Visible (VZWINTERNET)</option>
+                <option value="h2g2">Metro by T-Mobile (h2g2)</option>
+                <option value="wholesale">US Cellular (wholesale)</option>
+                <option value="Wholesale">Xfinity Mobile (Wholesale)</option>
+                <option value="TRACFONE.VZWENTP">Tracfone (Verizon) (TRACFONE.VZWENTP)</option>
+                <option value="tfdata">Tracfone (AT&T) (tfdata)</option>
+                <option value="tmus">Mint Mobile (tmus)</option>
+                <option value="Cricket">Cricket Wireless (Cricket)</option>
+                <option value="boost.data">Boost Mobile (boost.data)</option>
+                <option value="custom">Custom APN</option>
+            </select>
+            
+            <div id="custom-apn-container" style="display: none;">
+                <input type="text" id="custom-apn" placeholder="Enter custom APN name" style="display: block; width: 100%; padding: 12px; margin: 15px 0; border-radius: 4px; border: 1px solid #ccc; font-size: 16px;">
+            </div>
+            
+            <button id="generate-btn">Generate IPv4-Only Profile</button>
+        </div>
+        
+        <div class="info-section">
+            <h2>US Carrier APN List</h2>
+            <p>This table shows common APN settings for major US carriers:</p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Carrier</th>
+                        <th>APN Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Verizon</td>
+                        <td>vzwinternet</td>
+                    </tr>
+                    <tr>
+                        <td>AT&T</td>
+                        <td>NXTGENPHONE</td>
+                    </tr>
+                    <tr>
+                        <td>T-Mobile</td>
+                        <td>fast.t-mobile.com</td>
+                    </tr>
+                    <tr>
+                        <td>Sprint</td>
+                        <td>internet</td>
+                    </tr>
+                    <tr>
+                        <td>Visible</td>
+                        <td>VZWINTERNET</td>
+                    </tr>
+                    <tr>
+                        <td>Metro by T-Mobile</td>
+                        <td>h2g2</td>
+                    </tr>
+                    <tr>
+                        <td>US Cellular</td>
+                        <td>wholesale</td>
+                    </tr>
+                    <tr>
+                        <td>Xfinity Mobile</td>
+                        <td>Wholesale</td>
+                    </tr>
+                    <tr>
+                        <td>Tracfone (Verizon)</td>
+                        <td>TRACFONE.VZWENTP</td>
+                    </tr>
+                    <tr>
+                        <td>Tracfone (AT&T)</td>
+                        <td>tfdata</td>
+                    </tr>
+                    <tr>
+                        <td>Mint Mobile</td>
+                        <td>tmus</td>
+                    </tr>
+                    <tr>
+                        <td>Cricket Wireless</td>
+                        <td>Cricket</td>
+                    </tr>
+                    <tr>
+                        <td>Boost Mobile</td>
+                        <td>boost.data</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="info-section">
+            <h2>How to Install</h2>
+            <ol>
+                <li>Generate and download your profile</li>
+                <li>Open the file on your iOS device (tap on it in Files, Mail, or Messages)</li>
+                <li>When prompted, tap "Install" and enter your passcode</li>
+                <li>The profile will be installed under Settings → General → VPN & Device Management</li>
+                <li>Your device will now use IPv4 only for cellular data</li>
+            </ol>
+        </div>
+        
+        <footer>
+            <p>This tool is for educational purposes only. The APN settings and carrier names are subject to change.</p>
+            <p>© 2025 IPv4-Only APN Profile Generator</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const carrierSelect = document.getElementById('carrier-select');
+            const customApnContainer = document.getElementById('custom-apn-container');
+            const customApnInput = document.getElementById('custom-apn');
+            const generateBtn = document.getElementById('generate-btn');
+            
+            // Show/hide custom APN input based on selection
+            carrierSelect.addEventListener('change', function() {
+                if (this.value === 'custom') {
+                    customApnContainer.style.display = 'block';
+                } else {
+                    customApnContainer.style.display = 'none';
+                }
+            });
+            
+            // Generate and download profile
+            generateBtn.addEventListener('click', function() {
+                const selectedCarrier = carrierSelect.value;
+                
+                if (!selectedCarrier) {
+                    alert('Please select a carrier or choose "Custom APN"');
+                    return;
+                }
+                
+                let apnName;
+                if (selectedCarrier === 'custom') {
+                    apnName = customApnInput.value.trim();
+                    if (!apnName) {
+                        alert('Please enter a custom APN name');
+                        return;
+                    }
+                } else {
+                    apnName = selectedCarrier;
+                }
+                
+                // Generate profile XML
+                const uuid1 = generateUUID();
+                const uuid2 = generateUUID();
+                const profileName = `IPv4 Only - ${apnName}`;
+                
+                const profileXML = `<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>PayloadContent</key>
+    <array>
+        <dict>
+            <key>APNs</key>
+            <array>
+                <dict>
+                    <key>AuthenticationType</key>
+                    <string>CHAP</string>
+                    <key>Name</key>
+                    <string>${apnName}</string>
+                    <key>AllowedProtocolMask</key>
+                    <integer>1</integer>
+                </dict>
+            </array>
+            <key>AttachAPN</key>
+            <dict>
+                <key>AuthenticationType</key>
+                <string>CHAP</string>
+                <key>Name</key>
+                <string>${apnName}</string>
+                <key>AllowedProtocolMask</key>
+                <integer>1</integer>
+            </dict>
+            <key>PayloadDisplayName</key>
+            <string>IPv4 Only APN</string>
+            <key>PayloadIdentifier</key>
+            <string>com.cellular.ipv4only</string>
+            <key>PayloadType</key>
+            <string>com.apple.cellular</string>
+            <key>PayloadUUID</key>
+            <string>${uuid1}</string>
+            <key>PayloadVersion</key>
+            <real>1</real>
+        </dict>
+    </array>
+    <key>PayloadDisplayName</key>
+    <string>${profileName}</string>
+    <key>PayloadIdentifier</key>
+    <string>com.cellular.ipv4only.profile</string>
+    <key>PayloadRemovalDisallowed</key>
+    <false/>
+    <key>PayloadType</key>
+    <string>Configuration</string>
+    <key>PayloadUUID</key>
+    <string>${uuid2}</string>
+    <key>PayloadVersion</key>
+    <integer>1</integer>
+</dict>
+</plist>`;
+                
+                // Create and download file
+                const blob = new Blob([profileXML], { type: 'application/xml' });
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = `${profileName}.mobileconfig`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            });
+            
+            // Helper function to generate UUID
+            function generateUUID() {
+                return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                    const r = Math.random() * 16 | 0;
+                    const v = c === 'x' ? r : (r & 0x3 | 0x8);
+                    return v.toString(16);
+                });
+            }
+        });
+    </script>
+</body>
+</html>
